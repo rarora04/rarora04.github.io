@@ -5,7 +5,7 @@ const portfolioData = {
     name: "Rahul Arora",
     title: "Student",
     university: "Rice University Class of 2027 - Computer Science & Mathematics",
-    profilePic: "https://rarora04.github.io/rarora04.github.io/Photo.JPG",
+    profilePic: "/Photo.JPG",
     navLinks: [
       { name: "About Me", href: "#about" },
       { name: "Resume", href: "Rahul Resume.pdf", target: "_blank" },
