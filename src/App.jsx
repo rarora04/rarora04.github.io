@@ -5,7 +5,7 @@ const portfolioData = {
     name: "Rahul Arora",
     title: "Student",
     university: "Rice University Class of 2027 - Computer Science & Mathematics",
-    profilePic: "public/Photo.JPG",
+    profilePic: "/Photo.JPG",
     navLinks: [
       { name: "About Me", href: "#about" },
       { name: "Resume", href: "Rahul Resume.pdf", target: "_blank" },
@@ -30,6 +30,21 @@ const portfolioData = {
   },
 
   highlights: [
+    {
+      image: "/GCM_logo.png",
+      title: "SWE Intern @ GCM",
+      description: "API Gateway",
+    },
+    {
+      image: "/Rice_logo.png",
+      title: "Computer Science Researcher",
+      description: "Augmented Distribution Testing",
+    },
+    {
+      image: "/PROS_logo.png",
+      title: "SWE Intern @ PROS",
+      description: "API Pipeline",
+    },
   ],
 
   projects: {
@@ -99,7 +114,7 @@ function App() {
         <div className="container mx-auto px-4 text-center">
           <header className="major mb-8">
             <h2 className="text-4xl font-bold text-gray-400 mb-2">Highlights</h2>
-            <p className="text-xl text-gray-300">A few of my milestones over the past few years</p>
+            <p className="text-xl text-gray-300">A few groups I've been involved in over the past few years</p>
           </header>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {portfolioData.highlights.map((highlight, index) => (
@@ -121,7 +136,7 @@ function App() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-10">
             <h2 className="text-4xl font-bold text-gray-400 mb-2">Portfolio</h2>
-            <h5 className="text-lg text-gray-300 italic">Personal Projects in Github</h5>
+            <h5 className="text-lg text-gray-300">Personal Projects in Github</h5>
           </div>
           {Object.entries(portfolioData.projects).map(([year, projectsInYear]) => (
             <React.Fragment key={year}>
