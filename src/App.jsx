@@ -1,381 +1,292 @@
-import React, { useRef, useEffect, useState } from 'react';
-
-const FadeInOnScroll = ({ children, delay = 0, direction = 'bottom', startScale = 0.98 }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const domRef = useRef();
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && !isVisible) {
-        setIsVisible(true);
-      }
-    }, {
-      threshold: 0.1
-    });
-
-    if (domRef.current) {
-      observer.observe(domRef.current);
-    }
-
-    return () => {
-      if (domRef.current) {
-        observer.unobserve(domRef.current);
-      }
-    };
-  }, [isVisible]);
-
-  const getInitialTransformClasses = () => {
-    let translateClasses = '';
-    switch (direction) {
-      case 'left':
-        translateClasses = 'translate-x-[-20px]';
-        break;
-      case 'right':
-        translateClasses = 'translate-x-[20px]';
-        break;
-      case 'bottom':
-      default:
-        translateClasses = 'translate-y-[20px]';
-        break;
-    }
-    return translateClasses;
-  };
-
-  return (
-    <div
-      ref={domRef}
-      className={`
-        transform transition-all duration-1000 ease-out
-        ${isVisible ? 'opacity-100 translate-x-0 translate-y-0 scale-100' : `opacity-0 ${getInitialTransformClasses()} scale-[${startScale}]`}
-      `}
-      style={{ transitionDelay: `${delay}ms` }}
-    >
-      {children}
-    </div>
-  );
-};
-
+import React, { useState, useEffect, useRef } from 'react';
 
 const portfolioData = {
-  sidebar: {
-    name: "Rahul Arora",
-    title: "Learner",
-    university: "Rice University - CS, Math, FCAM",
-    profilePic: {
-      light: "/icon_light.png",
-      dark: "/icon_dark.png"
+  name: "Rahul Arora",
+  title: "Lifelong Learner",
+  tagline: "Always Seeking Elegant Solutions",
+  about: "I'm a CS & Math double major at Rice University interested in applying my skills to financial modeling and software development. I enjoy tackling complex problems and creating elegant solutions.",
+  experiences: [
+    {
+      role: "SWE Intern",
+      company: "GCM",
+      companyLink: "#",
+      date: "Summer 2025",
+      description: "API Gateway",
+      technologies: ["C#",]
     },
-    navLinks: [
-      { name: "Projects", href: "#portfolio" },
-      { name: "Experiences", href: "#experiences" },
+    {
+      role: "Theoretical CS Researcher",
+      company: "Rice University",
+      companyLink: "#",
+      date: "Spring 2025",
+      description: "Conducted research in augmented distribution testing, contributing to a novel algorithm for statistical analysis.",
+      technologies: ["Python", "LaTeX", "Jupyter"]
+    },
+    {
+      role: "SWE Intern",
+      company: "PROS",
+      companyLink: "#",
+      date: "Summer 2024",
+      description: "Engineered a robust data pipeline for processing and analyzing API usage metrics, improving system monitoring and client reporting capabilities.",
+      technologies: ["Java", "SQL"]
+    },
+  ],
+  projects: [
+  ],
+  navLinks: [
+      { name: "About", href: "#about" },
+      { name: "Experience", href: "#experience" },
+      { name: "Projects", href: "#projects" },
       { name: "Resume", href: "/Rahul Resume.pdf", target: "_blank" },
-    ],
-    socialLinks: [
+  ],
+  socialLinks: [
       { type: "github", href: "https://github.com/rarora04", label: "GitHub" },
       { type: "linkedin", href: "https://www.linkedin.com/in/rarora04", label: "LinkedIn" },
       { type: "email", href: "mailto:rahul.vp.arora@gmail.com", label: "Email" },
-    ],
-  },
-
-  about: {
-    heading: "Hi, I'm Rahul!",
-    content: (
-      <>
-        I'm a CS & Math double major at Rice University interested in applying my skills to financial modeling.
-      </>
-    ),
-    image: "/Photo.JPG",
-  },
-
-  experiences: [
-    {
-      image: "/GCM_logo.png",
-      title: "SWE Intern @ GCM",
-      year: "2025",
-      description: "API Gateway",
-    },
-    {
-      image: "/Rice_logo.png",
-      title: "Theoretical CS Researcher",
-      year: "2025",
-      description: "Augmented Distribution Testing",
-    },
-    {
-      image: "/PROS_logo.png",
-      title: "SWE Intern @ PROS",
-      year: "2024",
-      description: "API Pipeline",
-    },
-  ],
-
-  projects: [
-    
-  ],
+  ]
 };
 
-const SocialIconSVG = ({ type, sizeClasses = 'h-6 w-6' }) => {
-  let svgPath;
-  switch (type) {
-    case 'github':
-      svgPath = "M12 0C5.372 0 0 5.372 0 12c0 5.303 3.438 9.799 8.205 11.385.6.11.82-.26.82-.577v-2.222c-3.33.72-4.035-1.61-4.035-1.61-.546-1.387-1.332-1.758-1.332-1.758-1.09-.745.08-.73.08-.73 1.205.085 1.838 1.238 1.838 1.238 1.07 1.835 2.809 1.305 3.49.998.108-.775.418-1.305.762-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.12-.3-.53-1.52.115-3.175 0 0 1.005-.32 3.3 1.23.955-.265 1.975-.4 3-.405 1.025.005 2.045.14 3 .405 2.295-1.55 3.3-1.23 3.3-1.23.645 1.655.235 2.875.115 3.175.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22v3.29c0 .318.21.69.825.575C20.565 21.794 24 17.3 24 12c0-6.628-5.372-12-12-12z";
-      break;
-    case 'linkedin':
-      svgPath = "M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z";
-      break;
-    case 'email':
-      svgPath = "M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-18 4v7a2 2 0 002 2h14a2 2 0 002-2v-7m-18 0l7.89 5.26a2 2 0 002.22 0L21 12";
-      break;
-    default:
-      return null;
-  }
 
-  return (
-    <svg className={`${sizeClasses} transition duration-300`} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-      <path fillRule="evenodd" d={svgPath} clipRule="evenodd"></path>
+const GitHubIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-6 w-6" aria-hidden="true">
+        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
     </svg>
-  );
+);
+
+const LinkedInIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6" aria-hidden="true">
+        <path d="M20.5 2h-17A1.5 1.5 0 0 0 2 3.5v17A1.5 1.5 0 0 0 3.5 22h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 20.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 1 1 8.25 6.5 1.75 1.75 0 0 1 6.5 8.25zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.62 1.62 0 0 0 13 14.19V19h-3v-9h2.9v1.3a3.11 3.11 0 0 1 2.7-1.4c1.55 0 3.36.86 3.36 3.66z"></path>
+    </svg>
+);
+
+const EmailIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
+        <path d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"></path>
+    </svg>
+);
+
+const EasterEggIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" className="h-4 w-4 inline-block ml-1 transition-transform hover:scale-110">
+        <path d="M256,0C167.688,0,96,143.063,96,256c0,112.938,71.688,256,160,256s160-143.063,160-256C416,143.063,344.313,0,256,0z M352,288l-32-32l-32,32l-32-32l-32,32l-32-32l-32,32H98.656C110.344,157.938,175.875,32,256,32s145.656,125.938,157.344,256H352z"/>
+    </svg>
+);
+
+const ExternalLinkIcon = () => (
+     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="inline-block h-4 w-4 shrink-0 transition-transform group-hover/link:-translate-y-1 group-hover/link:translate-x-1 group-focus-visible/link:-translate-y-1 group-focus-visible/link:translate-x-1 motion-reduce:transition-none ml-1 translate-y-px" aria-hidden="true">
+        <path fillRule="evenodd" d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z" clipRule="evenodd"></path>
+    </svg>
+);
+
+const FilledMoonIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="0">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+  </svg>
+);
+
+const MoonIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 w-6">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25c0 5.385 4.365 9.75 9.75 9.75 2.572 0 4.92-.99 6.752-2.648z" />
+  </svg>
+);
+
+
+const Header = ({ data, activeLink, isDarkMode, toggleDarkMode }) => {
+    const SocialIcons = {
+        github: <GitHubIcon />,
+        linkedin: <LinkedInIcon />,
+        email: <EmailIcon />
+    };
+
+    return (
+        <header className="lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-1/2 lg:flex-col lg:justify-between lg:py-24">
+            <div>
+                <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-200 sm:text-5xl">
+                    <a href="/">{data.name}</a>
+                </h1>
+                <h2 className="mt-3 text-lg font-medium tracking-tight text-slate-900 dark:text-slate-200 sm:text-xl">
+                    {data.title}
+                </h2>
+                <p className="mt-4 max-w-xs leading-normal">
+                    {data.tagline}
+                </p>
+                <nav className="nav hidden lg:block" aria-label="In-page jump links">
+                    <ul className="mt-16 w-max">
+                        {data.navLinks.map(link => (
+                            <li key={link.href}>
+                                <a className="group flex items-center py-3" href={link.href} target={link.target || "_self"}>
+                                    <span className={`nav-indicator mr-4 h-px transition-all group-hover:w-16 group-hover:bg-slate-500 dark:group-hover:bg-slate-200 group-focus-visible:w-16 group-focus-visible:bg-slate-200 motion-reduce:transition-none ${activeLink === link.href.substring(1) ? 'w-16 bg-slate-900 dark:bg-slate-200' : 'w-8 bg-slate-400 dark:bg-slate-600'}`}></span>
+                                    <span className={`nav-text text-xs font-bold uppercase tracking-widest text-slate-500 group-hover:text-slate-900 dark:group-hover:text-slate-200 group-focus-visible:text-slate-200 ${activeLink === link.href.substring(1) ? 'text-slate-900 dark:text-slate-200' : 'text-slate-500'}`}>{link.name}</span>
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                </nav>
+            </div>
+            <div className="flex items-center mt-8">
+                 <ul className="ml-1 flex items-center" aria-label="Social media">
+                    {data.socialLinks.map(link => (
+                        <li key={link.type} className="mr-5 text-xs">
+                            <a className="block text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200" href={link.href} target={link.href.startsWith('http') ? '_blank' : '_self'} rel="noreferrer noopener">
+                                <span className="sr-only">{link.label}</span>
+                                {SocialIcons[link.type]}
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+                <button onClick={toggleDarkMode} className="ml-1 p-2 rounded-full text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle theme">
+                    {isDarkMode ? <FilledMoonIcon /> : <MoonIcon />}
+                </button>
+            </div>
+        </header>
+    );
 };
 
-
-function App() {
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    const savedTheme = localStorage.getItem('theme');
-    return savedTheme === 'dark';
-  });
-
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  }, [isDarkMode]);
-
-  const toggleDarkMode = () => {
-    setIsDarkMode(prevMode => !prevMode);
-  };
-
-
-  useEffect(() => {
-    document.title = `${portfolioData.sidebar.name} - Personal Portfolio`;
-  }, [portfolioData.sidebar.name]);
-
-  return (
-    <div className="min-h-screen bg-white dark:bg-gray-800 font-['Lora',serif] antialiased text-gray-900 dark:text-gray-100 flex flex-col md:flex-row">
-      <style>
-        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
-      </style>
-
-      <header className="md:hidden bg-white dark:bg-gray-800 shadow-lg p-4 z-50 border-b border-gray-200 dark:border-gray-700">
-        <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-black dark:text-gray-100">{portfolioData.sidebar.name}</h1>
-          <nav className="flex items-center space-x-4">
-            <ul className="flex space-x-4">
-              {portfolioData.sidebar.navLinks.slice(0, 3).map((link, index) => (
-                <li key={index}>
-                  <a href={link.href} target={link.target || "_self"} className="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition duration-300">
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-            <button
-              onClick={toggleDarkMode}
-              className="p-2 rounded-full text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-300"
-              aria-label="Toggle dark mode"
-            >
-              {isDarkMode ? (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" stroke="none">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                </svg>
-              ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"> {/* Crescent outline */}
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                </svg>
-              )}
-            </button>
-          </nav>
+const Section = React.forwardRef(({ id, title, children }, ref) => (
+    <section ref={ref} id={id} className="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24" aria-label={title}>
+        <div className="sticky top-0 z-20 -mx-6 mb-4 w-screen bg-white/80 dark:bg-slate-900/75 px-6 py-5 backdrop-blur md:-mx-12 md:px-12 lg:sr-only lg:relative lg:top-auto lg:mx-auto lg:w-full lg:px-0 lg:py-0 lg:opacity-0">
+            <h2 className="text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-slate-200 lg:sr-only">{title}</h2>
         </div>
-      </header>
+        {children}
+    </section>
+));
 
-      <aside className="hidden md:block md:w-80 md:flex-shrink-0 md:fixed md:h-screen md:overflow-y-auto bg-white dark:bg-gray-800 p-8 shadow-xl">
-        <div className="flex flex-col items-center py-4 h-full justify-between">
-          <div className="flex flex-col items-center">
-            <button
-              onClick={toggleDarkMode}
-              className="self-end p-2 rounded-full text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-300 mb-4"
-              aria-label="Toggle dark mode"
-            >
-              {isDarkMode ? (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" stroke="none">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                </svg>
-              ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"> {/* Crescent outline */}
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                </svg>
-              )}
-            </button>
-            <img
-              src={isDarkMode ? portfolioData.sidebar.profilePic.dark : portfolioData.sidebar.profilePic.light}
-              alt="Portrait of Your Name"
-              className="w-48 h-48 rounded-full border-4 border-black dark:border-gray-700 object-cover mb-4"
-            />
-            <h1 className="text-4xl font-extrabold text-black dark:text-gray-100 mb-2 text-center"><strong>{portfolioData.sidebar.name}</strong></h1>
-            <h3 className="text-xl text-gray-900 dark:text-gray-200 mb-2 text-center">{portfolioData.sidebar.title}</h3>
-            <p className="text-md text-gray-700 dark:text-gray-300 font-semibold mb-2 text-center">{portfolioData.sidebar.university}</p>
-          </div>
 
-          <nav className="w-full text-center flex-grow flex items-center justify-center my-6">
-            <ul className="space-y-1 list-none p-0">
-              {portfolioData.sidebar.navLinks.map((link, index) => (
-                <li key={index}>
-                  <a href={link.href} target={link.target || "_self"} className="block p-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition duration-300 text-base font-medium">
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
+export default function App() {
+    const [isDarkMode, setIsDarkMode] = useState(() => {
+        if (typeof window !== 'undefined') {
+            const savedTheme = localStorage.getItem('theme');
+            return savedTheme === 'dark' || (savedTheme === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        }
+        return false;
+    });
 
-          <ul className="flex space-x-6 justify-center list-none p-0 pt-6 border-t border-gray-200 dark:border-gray-700 w-full">
-            {portfolioData.sidebar.socialLinks.map((link, index) => (
-              <li key={index}>
-                <a href={link.href} target="_blank" rel="noopener noreferrer" className="inline-block hover:scale-110 transition-transform duration-300 text-gray-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400">
-                  <SocialIconSVG type={link.type} sizeClasses="h-8 w-8" />
-                  <span className="sr-only">{link.label}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
+    useEffect(() => {
+        const root = window.document.documentElement;
+        if (isDarkMode) {
+            root.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            root.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+        }
+    }, [isDarkMode]);
+
+    const toggleDarkMode = () => setIsDarkMode(prev => !prev);
+    
+    const [activeLink, setActiveLink] = useState('about');
+    const aboutRef = useRef(null);
+    const experienceRef = useRef(null);
+    const projectsRef = useRef(null);
+
+    useEffect(() => {
+        const sections = [aboutRef, experienceRef, projectsRef];
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    setActiveLink(entry.target.id);
+                }
+            });
+        }, {
+            rootMargin: '-30% 0px -70% 0px',
+            threshold: 0
+        });
+
+        sections.forEach(sectionRef => {
+            if (sectionRef.current) observer.observe(sectionRef.current);
+        });
+
+        return () => {
+             sections.forEach(sectionRef => {
+                if (sectionRef.current) observer.unobserve(sectionRef.current);
+            });
+        };
+    }, []);
+
+    return (
+        <div className="bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 font-sans">
+             <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+                body { font-family: 'Inter', sans-serif; }
+            `}</style>
+            <div className="mx-auto min-h-screen max-w-screen-xl px-6 py-12 md:px-12 md:py-20 lg:px-24 lg:py-0">
+                <div className="lg:flex lg:justify-between lg:gap-4">
+                    <Header data={portfolioData} activeLink={activeLink} isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
+                    <main id="content" className="pt-24 lg:w-1/2 lg:py-24">
+                        <Section id="about" title="About" ref={aboutRef}>
+                            <p>{portfolioData.about}</p>
+                        </Section>
+
+                        <Section id="experience" title="Experience" ref={experienceRef}>
+                             <ol className="group/list">
+                                {portfolioData.experiences.map((exp, index) => (
+                                    <li className="mb-12" key={index}>
+                                        <div className="group relative grid pb-1 transition-all sm:grid-cols-8 sm:gap-8 md:gap-4 lg:hover:!opacity-100 lg:group-hover/list:opacity-50">
+                                            <div className="absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-md transition motion-reduce:transition-none lg:-inset-x-6 lg:block lg:group-hover:bg-slate-100/50 dark:lg:group-hover:bg-slate-800/50 lg:group-hover:shadow-[inset_0_1px_0_0_rgba(148,163,184,0.1)] lg:group-hover:drop-shadow-lg"></div>
+                                            <header className="z-10 mb-2 mt-1 text-xs font-semibold uppercase tracking-wide text-slate-500 sm:col-span-2" aria-label={exp.date}>{exp.date}</header>
+                                            <div className="z-10 sm:col-span-6">
+                                                <h3 className="font-medium leading-snug text-slate-900 dark:text-slate-200">
+                                                    <div>
+                                                        <a className="inline-flex items-baseline font-medium leading-tight text-slate-900 dark:text-slate-200 hover:text-sky-500 dark:hover:text-teal-300 focus-visible:text-sky-500 dark:focus-visible:text-teal-300 group/link text-base" href={exp.companyLink} target="_blank" rel="noreferrer noopener" aria-label={`${exp.role} at ${exp.company}`}>
+                                                            <span className="absolute -inset-x-4 -inset-y-2.5 hidden rounded md:-inset-x-6 md:-inset-y-4 lg:block"></span>
+                                                            <span>{exp.role} · <span className="inline-block">{exp.company}<ExternalLinkIcon/></span></span>
+                                                        </a>
+                                                    </div>
+                                                </h3>
+                                                <p className="mt-2 text-sm leading-normal">{exp.description}</p>
+                                                <ul className="mt-2 flex flex-wrap" aria-label="Technologies used">
+                                                    {exp.technologies.map(tech => (
+                                                        <li key={tech} className="mr-1.5 mt-2">
+                                                            <div className="flex items-center rounded-full bg-sky-400/10 px-3 py-1 text-xs font-medium leading-5 text-sky-600 dark:bg-teal-400/10 dark:text-teal-300">
+                                                                {tech}
+                                                            </div>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ol>
+                        </Section>
+
+                        <Section id="projects" title="Projects" ref={projectsRef}>
+                            <ul className="group/list">
+                                {portfolioData.projects.map((proj, index) => (
+                                   <li className="mb-12" key={index}>
+                                        <div className="group relative grid gap-4 pb-1 transition-all sm:grid-cols-8 sm:gap-8 md:gap-4 lg:hover:!opacity-100 lg:group-hover/list:opacity-50">
+                                            <div className="absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-md transition motion-reduce:transition-none lg:-inset-x-6 lg:block lg:group-hover:bg-slate-100/50 dark:lg:group-hover:bg-slate-800/50 lg:group-hover:shadow-[inset_0_1px_0_0_rgba(148,163,184,0.1)] lg:group-hover:drop-shadow-lg"></div>
+                                             <div className="z-10 sm:order-2 sm:col-span-6">
+                                                <h3 className="font-medium leading-snug text-slate-900 dark:text-slate-200">
+                                                    <a className="inline-flex items-baseline font-medium leading-tight text-slate-900 dark:text-slate-200 hover:text-sky-500 dark:hover:text-teal-300 focus-visible:text-sky-500 dark:focus-visible:text-teal-300 group/link text-base" href={proj.link} target="_blank" rel="noreferrer noopener" aria-label={proj.title}>
+                                                        <span className="absolute -inset-x-4 -inset-y-2.5 hidden rounded md:-inset-x-6 md:-inset-y-4 lg:block"></span>
+                                                        <span>{proj.title} <ExternalLinkIcon/></span>
+                                                    </a>
+                                                </h3>
+                                                <p className="mt-2 text-sm leading-normal">{proj.description}</p>
+                                                 <ul className="mt-2 flex flex-wrap" aria-label="Technologies used">
+                                                    {proj.technologies.map(tech => (
+                                                        <li key={tech} className="mr-1.5 mt-2">
+                                                            <div className="flex items-center rounded-full bg-sky-400/10 px-3 py-1 text-xs font-medium leading-5 text-sky-600 dark:bg-teal-400/10 dark:text-teal-300">
+                                                                {tech}
+                                                            </div>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                   </li>
+                                ))}
+                            </ul>
+                        </Section>
+                        <footer className="max-w-md pb-16 text-sm text-slate-500 sm:pb-0">
+                            <p>
+                                Hope you enjoy this little 
+                                <a href="#" className="text-slate-600 hover:text-sky-500 dark:text-slate-400 dark:hover:text-teal-300"><EasterEggIcon /></a>.
+                            </p>
+                        </footer>
+                    </main>
+                </div>
+            </div>
         </div>
-      </aside>
-
-      <main className="w-full md:ml-80 md:flex-grow pt-16 md:pt-0">
-        <FadeInOnScroll direction="bottom" startScale={0.98}>
-          <section id="about" className="main style1 py-16 bg-white dark:bg-gray-800">
-            <div className="container mx-auto px-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-                <div className="md:col-span-2">
-                  <header className="major mb-6">
-                    <h2 className="text-4xl font-bold text-black dark:text-gray-100 mb-2">{portfolioData.about.heading}</h2>
-                  </header>
-                  <p className="text-lg text-gray-800 dark:text-gray-200 leading-relaxed space-y-4">
-                    {portfolioData.about.content}
-                  </p>
-                </div>
-                <div className="md:col-span-1 flex justify-center items-center">
-                  <img
-                    src={portfolioData.about.image}
-                    alt="Image related to About section"
-                    className="rounded-lg shadow-xl w-full max-w-sm object-cover"
-                  />
-                </div>
-              </div>
-            </div>
-          </section>
-        </FadeInOnScroll>
-
-        <FadeInOnScroll direction="bottom" delay={100} startScale={0.98}>
-          <section id="experiences" className="main style2 py-16 bg-gray-100 dark:bg-gray-800">
-            <div className="container mx-auto px-4 text-center">
-              <header className="major mb-8">
-                <h2 className="text-4xl font-bold text-black dark:text-gray-100 mb-2">Experiences</h2>
-                <p className="text-xl text-gray-700 dark:text-gray-300">A few of my milestones over the past few years</p>
-              </header>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {portfolioData.experiences.map((experience, index) => (
-                  <FadeInOnScroll key={index} delay={index * 100} direction="bottom" startScale={0.98}>
-                    <div className="flex flex-col items-center bg-white dark:bg-gray-900 p-6 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition duration-300 transform hover:scale-105 group">
-                      <div className="flex items-center justify-center mb-4 w-full">
-                        <img
-                          src={experience.image}
-                          alt={experience.title}
-                          className="w-32 h-32 rounded-full border-4 border-black dark:border-gray-700"
-                        />
-                      </div>
-                      <div className="flex items-center justify-center mb-2">
-                        <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition duration-300">{experience.title}</h3>
-                        {experience.year && (
-                          <span className="ml-2 px-2 py-1 text-xs font-bold rounded-full bg-blue-600 dark:bg-blue-400 text-white dark:text-gray-900 transition duration-300">
-                            {experience.year}
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-gray-700 dark:text-gray-300 text-center">{experience.description}</p>
-                    </div>
-                  </FadeInOnScroll>
-                ))}
-              </div>
-            </div>
-          </section>
-        </FadeInOnScroll>
-
-        <FadeInOnScroll direction="bottom" delay={200} startScale={0.98}>
-          <section id="portfolio" className="main style1 special py-16 bg-white dark:bg-gray-800">
-            <div className="container mx-auto px-4">
-              <div className="text-center mb-10">
-                <h2 className="text-4xl font-bold text-black dark:text-gray-100 mb-2">Portfolio</h2>
-                <h5 className="text-lg text-gray-700 dark:text-gray-300">Explore my recent work</h5>
-              </div>
-
-              {portfolioData.projects.map((project, index) => (
-                <FadeInOnScroll key={index} delay={index * 150} direction={index % 2 === 0 ? "left" : "right"} startScale={0.98}>
-                  <div
-                    className={`
-                      flex flex-col items-center gap-8 md:gap-16 my-12 p-8 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700
-                      ${index % 2 === 0 ? 'bg-gray-100 dark:bg-gray-900 md:flex-row' : 'bg-gray-100 dark:bg-gray-900 md:flex-row-reverse'}
-                      hover:shadow-2xl transition duration-300 transform hover:scale-[1.01] group
-                    `}
-                  >
-                    <div className="w-full md:w-1/2">
-                      <img
-                        src={project.image}
-                        alt={project.altText}
-                        className="rounded-lg shadow-lg w-full h-auto object-cover border border-gray-200 dark:border-gray-700"
-                      />
-                    </div>
-                    <div className="w-full md:w-1/2 text-center md:text-left">
-                      <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition duration-300 mb-4">{project.title}</h3>
-                      <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
-                        {project.description}
-                      </p>
-                      <div className="flex justify-center md:justify-start space-x-4">
-                        {project.buttons.map((button, btnIndex) => (
-                          <a
-                            key={btnIndex}
-                            href={button.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={`
-                              inline-block py-3 px-6 rounded-md font-semibold transition duration-300 transform hover:scale-105
-                              ${button.type === 'primary' ? 'bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-400 dark:text-gray-900 dark:hover:bg-blue-500' : 'bg-gray-300 text-gray-900 hover:bg-gray-400 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600'}
-                            `}
-                          >
-                            {button.text}
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </FadeInOnScroll>
-              ))}
-            </div>
-          </section>
-        </FadeInOnScroll>
-
-        <footer id="footer" className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-400 py-6 text-center border-t border-gray-200 dark:border-gray-700">
-          <div className="container mx-auto px-4">
-            <ul className="copyright text-sm list-none p-0">
-              <li>©{new Date().getFullYear()} {portfolioData.sidebar.name}</li>
-            </ul>
-          </div>
-        </footer>
-      </main>
-    </div>
-  );
+    );
 }
-
-export default App;
