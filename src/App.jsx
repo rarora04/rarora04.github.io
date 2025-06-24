@@ -4,35 +4,38 @@ const portfolioData = {
   name: "Rahul Arora",
   title: "Lifelong Learner",
   tagline: "Always Seeking Elegant Solutions",
-  about: "I'm a CS & Math double major at Rice University interested in applying my skills to financial modeling and software development. I enjoy tackling complex problems and creating elegant solutions.",
+  about: [
+    "I'm a CS & Math double major at Rice University interested in applying my skills to financial modeling and software development.",
+    "My journey has taken me from learning the fundamentals of software engineering at PROS to my current role at Graham Capital Management, where I develop technologies and provide crucial data for traders and systematic teams.",
+    "I'm now aiming to dive deeper into data analytics and quantitative research. The projects below hope to show my modeling skills and my exploration of complex financial concepts."
+  ],
   experiences: [
     {
       role: "SWE Intern",
-      company: "GCM",
-      companyLink: "#",
+      company: "Graham Capital Management",
+      companyLink: "https://www.gcm.com/",
       date: "Summer 2025",
-      description: "API Gateway",
-      technologies: ["C#",]
+      description: "API Gateway; 20B AUM",
+      technologies: ["C#"]
     },
     {
       role: "Theoretical CS Researcher",
       company: "Rice University",
-      companyLink: "#",
-      date: "Spring 2025",
+      companyLink: "https://cs.rice.edu/",
+      date: "Spring 2025 - Present",
       description: "Conducted research in augmented distribution testing, contributing to a novel algorithm for statistical analysis.",
       technologies: ["Python", "LaTeX", "Jupyter"]
     },
     {
       role: "SWE Intern",
       company: "PROS",
-      companyLink: "#",
+      companyLink: "https://pros.com/",
       date: "Summer 2024",
       description: "Engineered a robust data pipeline for processing and analyzing API usage metrics, improving system monitoring and client reporting capabilities.",
       technologies: ["Java", "SQL"]
     },
   ],
-  projects: [
-  ],
+  projects: [],
   navLinks: [
       { name: "About", href: "#about" },
       { name: "Experience", href: "#experience" },
@@ -201,6 +204,11 @@ export default function App() {
             });
         };
     }, []);
+    
+    useEffect(() => {
+        document.title = `${portfolioData.name} | Personal Portfolio`;
+    }, []);
+
 
     return (
         <div className="bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 font-sans">
@@ -213,7 +221,9 @@ export default function App() {
                     <Header data={portfolioData} activeLink={activeLink} isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
                     <main id="content" className="pt-24 lg:w-1/2 lg:py-24">
                         <Section id="about" title="About" ref={aboutRef}>
-                            <p>{portfolioData.about}</p>
+                            {portfolioData.about.map((paragraph, index) => (
+                                <p className="mb-4" key={index}>{paragraph}</p>
+                            ))}
                         </Section>
 
                         <Section id="experience" title="Experience" ref={experienceRef}>
@@ -279,9 +289,8 @@ export default function App() {
                             </ul>
                         </Section>
                         <footer className="max-w-md pb-16 text-sm text-slate-500 sm:pb-0">
-                            <p>
-                                Hope you enjoy this little 
-                                <a href="#" className="text-slate-600 hover:text-sky-500 dark:text-slate-400 dark:hover:text-teal-300"><EasterEggIcon /></a>.
+                            <p className="flex items-center justify-center">
+                                Hope you enjoy this little <EasterEggIcon></EasterEggIcon>.
                             </p>
                         </footer>
                     </main>
