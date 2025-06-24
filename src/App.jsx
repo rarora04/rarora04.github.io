@@ -13,9 +13,9 @@ const portfolioData = {
     {
       role: "SWE Intern",
       company: "Graham Capital Management",
-      companyLink: "https://www.gcm.com/",
+      companyLink: "https://www.grahamcapital.com/",
       date: "Summer 2025",
-      description: "API Gateway; 20B AUM",
+      description: "API Gateway - consolidated centralized consumption layer for data delivery; 20B AUM",
       technologies: ["C#"]
     },
     {
@@ -33,6 +33,14 @@ const portfolioData = {
       date: "Summer 2024",
       description: "Engineered a robust data pipeline for processing and analyzing API usage metrics, improving system monitoring and client reporting capabilities.",
       technologies: ["Java", "SQL"]
+    },
+    {
+      role: "Student Coordinator",
+      company: "Rice GIS/Data Center",
+      companyLink: "https://www.library.rice.edu/places/gisdata-center-gdc",
+      date: "Fall 2023 - Present",
+      description: "Performed regression analysis on US Gov. census tract datasets using ArcGIS Pro to determine Texas's energy generation sources.",
+      technologies: ["ArcGIS",]
     },
   ],
   projects: [],
