@@ -53,15 +53,15 @@ const portfolioData = {
         title: "Personal Website",
         description: "This website that you're using!",
         technologies: ["React", "Tailwind", "Vite"]
+    },
+    {
+        title: "Sports Attendance Tracker",
+        description: "A tracker for my high school's athletics department, utilizing QR codes to track student attedance.",
+        technologies: ["SQL", "PHP", "JavaScript", "HTML"]
     }
   ],
   quantProjects: [
-      {
-        title: "Algorithmic Trading Strategy Backtester",
-        link: "https://github.com/rarora04/algo-backtester",
-        description: "A Python-based framework for backtesting mean-reversion and momentum strategies on historical stock data. Features performance metrics like Sharpe ratio and max drawdown.",
-        technologies: ["Python", "Pandas", "NumPy", "Matplotlib"]
-      },
+      
   ],
   navLinks: [
       { name: "About", href: "#about" },
@@ -288,7 +288,7 @@ export default function App() {
                             </ul>
                         </Section>
 
-                        <Section id="experience" title="Experience">
+                        <Section id="experience" title="Experience" ref={experienceRef}>
                             <ul className="group/list">
                                 {portfolioData.experiences.map(exp => (
                                     <ExperienceItem key={exp.role + exp.company} experience={exp} themeColor="blue" />
