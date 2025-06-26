@@ -1,6 +1,0 @@
-{
-        title: "Algorithmic Trading Strategy Backtester",
-        link: "https://github.com/rarora04/algo-backtester",
-        description: "A Python-based framework for backtesting mean-reversion and momentum strategies on historical stock data. Features performance metrics like Sharpe ratio and max drawdown.",
-        technologies: ["Python", "Pandas", "NumPy", "Matplotlib"]
-      },

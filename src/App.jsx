@@ -61,7 +61,12 @@ const portfolioData = {
     }
   ],
   quantProjects: [
-      
+      {
+      title: "Volatility Analysis",
+      link: "https://github.com/rarora04/Vol-Analysis/",
+      description: "A Python-based framework for analyzing volatility.",
+      technologies: ["Python", "Pandas", "NumPy", "Matplotlib"]
+    },
   ],
   navLinks: [
       { name: "About", href: "#about" },
