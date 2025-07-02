@@ -1,3 +1,4 @@
+// App.js
 import React, { useState, useEffect, useRef } from 'react';
 import QuantPortfolioPage from './QuantPortfolioPage';
 
@@ -106,7 +107,7 @@ const Header = ({ data, activeLink, isDarkMode, toggleDarkMode }) => {
     return (
         <header className="lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-1/2 lg:flex-col lg:justify-between lg:py-24">
             <div>
-                <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-200 sm:text-5xl"><a href="/">{data.name}</a></h1>
+                <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-200 sm:text-5xl">{data.name}</h1>
                 <h2 className="mt-3 text-lg font-medium tracking-tight text-slate-900 dark:text-slate-200 sm:text-xl">{data.title}</h2>
                 <p className="mt-4 max-w-xs leading-normal">{data.tagline}</p>
                 <nav className="nav hidden lg:block" aria-label="In-page jump links">
@@ -146,85 +147,121 @@ const Section = React.forwardRef(({ id, title, children }, ref) => (
 ));
 
 const ProjectItem = ({ project, onProjectClick, themeColor }) => {
-    const theme = colorThemes[themeColor] || colorThemes.blue;
-    const isInternalLink = project.link === 'quant-portfolio';
+  const theme = colorThemes[themeColor] || colorThemes.blue;
+  const isInternalLink = project.link === 'quant-portfolio';
+  const linkProps = project.link && !isInternalLink
+    ? { href: project.link, target: '_blank', rel: 'noreferrer noopener' }
+    : {};
+  const Component = project.link ? 'a' : 'div';
 
-    const linkProps = isInternalLink
-      ? { onClick: () => onProjectClick('quant-portfolio'), role: 'button' }
-      : { href: project.link, target: '_blank', rel: 'noreferrer noopener' };
-
-    const Component = project.link ? 'a' : 'div';
-
-    return (
-         <li className="mb-12">
-            <div className="group relative grid gap-4 pb-1 transition-all sm:grid-cols-8 sm:gap-8 md:gap-4 lg:hover:!opacity-100 lg:group-hover/list:opacity-50">
-                <div className="absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-md transition motion-reduce:transition-none lg:-inset-x-6 lg:block lg:group-hover:bg-slate-100/50 dark:lg:group-hover:bg-slate-800/50 lg:group-hover:shadow-[inset_0_1px_0_0_rgba(148,163,184,0.1)] lg:group-hover:drop-shadow-lg"></div>
-                <div className="z-10 sm:col-span-8">
-                    <h3 className="font-medium leading-snug text-slate-900 dark:text-slate-200">
-                        <Component
-                            className={`inline-flex items-baseline font-medium leading-tight text-slate-900 dark:text-slate-200 ${theme.linkClasses} group/link text-base ${isInternalLink ? 'cursor-pointer' : ''}`}
-                            {...(project.link ? linkProps : {})}
-                        >
-                            <span className="absolute -inset-x-4 -inset-y-2.5 hidden rounded md:-inset-x-6 md:-inset-y-4 lg:block"></span>
-                            <span>
-                                {project.title}{" "}
-                                {project.link && <ExternalLinkIcon />}
-                            </span>
-                        </Component>
-                    </h3>
-                    <p className="mt-2 text-sm leading-normal">{project.description}</p>
-                    <ul className="mt-2 flex flex-wrap" aria-label="Technologies used">
-                        {project.technologies.map(tech => (
-                            <li key={tech} className="mr-1.5 mt-2">
-                                <div className={`flex items-center rounded-full px-3 py-1 text-xs font-medium leading-5 ${theme.tagClasses}`}>
-                                    {tech}
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
+  return (
+    <li className="mb-12">
+      <div
+        className={`
+          group clickable relative grid p-4 transition-all sm:grid-cols-8 sm:gap-8 md:gap-4 hover:!opacity-100 group-hover/list:opacity-50
+          transform transition-all duration-150 ease-[cubic-bezier(.4,2,.6,1)]
+          hover:scale-[1.01] hover:shadow-lg
+          active:scale-[0.99] active:translate-y-0.5 active:shadow-inner
+          ${isInternalLink ? 'cursor-pointer' : ''}
+          rounded-lg
+        `}
+        {...(isInternalLink
+          ? {
+              onClick: () => onProjectClick('quant-portfolio'),
+              role: 'button',
+              tabIndex: 0,
+              onKeyDown: (e) => {
+                if (e.key === 'Enter' || e.key === ' ') onProjectClick('quant-portfolio');
+              },
+            }
+          : {})}
+      >
+        <header className="z-10 mb-2 mt-1 text-xs font-semibold uppercase tracking-wide text-slate-500 sm:col-span-2" aria-hidden="true"></header>
+        <div className="z-10 sm:col-span-6">
+          <h3 className="font-medium leading-snug text-slate-900 dark:text-slate-200">
+            <Component
+              className={`inline-flex items-baseline font-medium leading-tight text-slate-900 dark:text-slate-200 ${theme.linkClasses} group/link text-base`}
+              {...linkProps}
+            >
+              <span className="absolute -inset-x-4 -inset-y-2.5 hidden rounded md:-inset-x-6 md:-inset-y-4 lg:block"></span>
+              <span
+                className="
+                  transition-colors duration-100
+                  ease-[cubic-bezier(.4,2,.6,1)]
+                  group-hover:text-sky-600
+                  dark:group-hover:text-sky-300
+                "
+              >
+                {project.title}
+                {project.link && !isInternalLink && <ExternalLinkIcon />}
+              </span>
+            </Component>
+          </h3>
+          <p className="mt-2 text-sm leading-normal">{project.description}</p>
+          <ul className="mt-2 flex flex-wrap" aria-label="Technologies used">
+            {project.technologies.map(tech => (
+              <li key={tech} className="mr-1.5 mt-2">
+                <div className={`flex items-center rounded-full px-3 py-1 text-xs font-medium leading-5 ${theme.tagClasses}`}>
+                  {tech}
                 </div>
-            </div>
-       </li>
-    )
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </li>
+  );
 };
 
 const ExperienceItem = ({ experience, themeColor }) => {
-    const theme = colorThemes[themeColor] || colorThemes.blue;
-    const Component = experience.companyLink ? 'a' : 'div';
-    const linkProps = experience.companyLink 
-        ? { href: experience.companyLink, target: '_blank', rel: 'noreferrer noopener' } 
-        : {};
+  const theme = colorThemes[themeColor] || colorThemes.blue;
+  const Component = experience.companyLink ? 'a' : 'div';
+  const linkProps = experience.companyLink
+    ? { href: experience.companyLink, target: '_blank', rel: 'noreferrer noopener' }
+    : {};
 
-    return (
-        <li className="mb-12">
-            <div className="group relative grid pb-1 transition-all sm:grid-cols-8 sm:gap-8 md:gap-4 hover:!opacity-100 group-hover/list:opacity-50">
-                <div className="absolute -inset-x-4 -inset-y-4 z-0 rounded-md transition motion-reduce:transition-none md:-inset-x-6 group-hover:bg-slate-100/50 dark:group-hover:bg-slate-800/50 group-hover:shadow-[inset_0_1px_0_0_rgba(148,163,184,0.1)] group-hover:drop-shadow-lg"></div>
-                <header className="z-10 mb-2 mt-1 text-xs font-semibold uppercase tracking-wide text-slate-500 sm:col-span-2" aria-label={experience.date}>{experience.date}</header>
-                <div className="z-10 sm:col-span-6">
-                    <h3 className="font-medium leading-snug text-slate-900 dark:text-slate-200">
-                        <Component
-                            className={`inline-flex items-baseline font-medium leading-tight text-slate-900 dark:text-slate-200 ${experience.companyLink ? theme.linkClasses : ''} group/link text-base`}
-                            {...linkProps}
-                        >
-                            <span className="absolute -inset-x-4 -inset-y-2.5 hidden rounded md:-inset-x-6 md:-inset-y-4 lg:block"></span>
-                            <span>
-                                {experience.role} · <span className="inline-block">{experience.company}{experience.companyLink && <ExternalLinkIcon/>}</span>
-                            </span>
-                        </Component>
-                    </h3>
-                    <p className="mt-2 text-sm leading-normal">{experience.description}</p>
-                    <ul className="mt-2 flex flex-wrap" aria-label="Technologies used">
-                        {experience.technologies.map(tech => (
-                            <li key={tech} className="mr-1.5 mt-2">
-                                <div className={`flex items-center rounded-full px-3 py-1 text-xs font-medium leading-5 ${theme.tagClasses}`}>{tech}</div>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            </div>
-        </li>
-    );
+  return (
+    <li className="mb-12">
+      <div className="group clickable relative grid p-4 transition-all sm:grid-cols-8 sm:gap-8 md:gap-4 hover:!opacity-100 group-hover/list:opacity-50
+        transform transition-all duration-150 ease-[cubic-bezier(.4,2,.6,1)]
+        hover:scale-[1.01] hover:shadow-lg
+        active:scale-[0.99] active:translate-y-0.5 active:shadow-inner
+        rounded-lg
+      ">
+        <header className="z-10 mb-2 mt-1 text-xs font-semibold uppercase tracking-wide text-slate-500 sm:col-span-2" aria-label={experience.date}>{experience.date}</header>
+        <div className="z-10 sm:col-span-6">
+          <h3 className="font-medium leading-snug text-slate-900 dark:text-slate-200">
+            <Component
+              className={`inline-flex items-baseline font-medium leading-tight text-slate-900 dark:text-slate-200 ${experience.companyLink ? theme.linkClasses : ''} group/link text-base`}
+              {...linkProps}
+            >
+              <span className="absolute -inset-x-4 -inset-y-2.5 hidden rounded md:-inset-x-6 md:-inset-y-4 lg:block"></span>
+              <span
+                className="
+                  transition-colors duration-100
+                  ease-[cubic-bezier(.4,2,.6,1)]
+                  group-hover:text-sky-600
+                  dark:group-hover:text-sky-300
+                "
+              >
+                {experience.role} · <span className="inline-block">{experience.company}{experience.companyLink && <ExternalLinkIcon />}</span>
+              </span>
+            </Component>
+          </h3>
+          <p className="mt-2 text-sm leading-normal">{experience.description}</p>
+          <ul className="mt-2 flex flex-wrap" aria-label="Technologies used">
+            {experience.technologies.map(tech => (
+              <li key={tech} className="mr-1.5 mt-2">
+                <div className={`flex items-center rounded-full px-3 py-1 text-xs font-medium leading-5 ${theme.tagClasses}`}>{tech}</div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </li>
+  );
 };
+
 
 
 export default function App() {
@@ -235,7 +272,12 @@ export default function App() {
         }
         return false;
     });
-    
+
+    const [cursorX, setCursorX] = useState(0);
+    const [cursorY, setCursorY] = useState(0);
+    const [isCursorVisible, setIsCursorVisible] = useState(false);
+    const [isHoveringClickable, setIsHoveringClickable] = useState(false);
+
     useEffect(() => {
         const root = window.document.documentElement;
         if (isDarkMode) {
@@ -246,72 +288,184 @@ export default function App() {
             localStorage.setItem('theme', 'light');
         }
     }, [isDarkMode]);
-
     const toggleDarkMode = () => setIsDarkMode(prev => !prev);
-    
+
     const [activeLink, setActiveLink] = useState('about');
     const aboutRef = useRef(null);
     const experienceRef = useRef(null);
     const projectsRef = useRef(null);
 
     useEffect(() => {
-        if(page !== 'home') return;
-        const sections = [aboutRef, experienceRef, projectsRef];
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { if (entry.isIntersecting) setActiveLink(entry.target.id); });
-        }, { rootMargin: '-30% 0px -70% 0px', threshold: 0 });
-
-        sections.forEach(ref => { if (ref.current) observer.observe(ref.current); });
-        return () => sections.forEach(ref => { if (ref.current) observer.unobserve(ref.current); });
+        if (page === 'home') {
+            const sections = [aboutRef, experienceRef, projectsRef];
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        setActiveLink(entry.target.id);
+                    }
+                });
+            }, { rootMargin: '-30% 0px -70% 0px', threshold: 0 });
+            sections.forEach(ref => {
+                if (ref.current) observer.observe(ref.current);
+            });
+            return () => sections.forEach(ref => {
+                if (ref.current) observer.unobserve(ref.current);
+            });
+        }
     }, [page]);
-    
-    useEffect(() => { document.title = `${portfolioData.name} | Personal Portfolio`; }, []);
 
-    if (page === 'quant-portfolio') {
-        return <QuantPortfolioPage projects={portfolioData.quantProjects} onBackClick={() => setPage('home')} />;
-    }
+    useEffect(() => {
+        document.title = page === 'home' ? `Rahul Arora | Personal Portfolio` : `Rahul Arora | Quant Portfolio`;
+    }, [page]);
+
+    useEffect(() => {
+        const customCursor = document.getElementById('custom-cursor');
+        if (!customCursor) return;
+
+        const updateCursorPosition = (e) => {
+            setCursorX(e.clientX);
+            setCursorY(e.clientY);
+            setIsCursorVisible(true);
+        };
+        const hideCursor = () => setIsCursorVisible(false);
+
+        const handleMouseEnter = (e) => {
+            const target = e.target;
+            const isClickable =
+                target.tagName === 'A' ||
+                target.tagName === 'BUTTON' ||
+                target.closest('[role="button"]') ||
+                target.closest('.clickable');
+            setIsHoveringClickable(isClickable);
+        };
+        const handleMouseLeave = () => setIsHoveringClickable(false);
+
+        document.addEventListener('mousemove', updateCursorPosition);
+        document.documentElement.addEventListener('mouseleave', hideCursor);
+        document.documentElement.addEventListener('mouseover', handleMouseEnter);
+        document.documentElement.addEventListener('mouseout', handleMouseLeave);
+
+        const handleClick = () => {
+            if (customCursor) {
+                customCursor.style.transform += ' scale(0.7)';
+                setTimeout(() => {
+                    customCursor.style.transform = customCursor.style.transform.replace(' scale(0.7)', '');
+                }, 120);
+            }
+        };
+        document.addEventListener('mousedown', handleClick);
+
+        return () => {
+            document.removeEventListener('mousemove', updateCursorPosition);
+            document.documentElement.removeEventListener('mouseleave', hideCursor);
+            document.documentElement.removeEventListener('mouseover', handleMouseEnter);
+            document.documentElement.removeEventListener('mouseout', handleMouseLeave);
+            document.removeEventListener('mousedown', handleClick);
+        };
+    }, []);
+
+    useEffect(() => {
+        const customCursor = document.getElementById('custom-cursor');
+        if (customCursor) {
+            const radius = 5;
+            customCursor.style.transform = `
+                translate(${cursorX - radius}px, ${cursorY - radius}px)
+                scale(${isHoveringClickable ? 1.2 : 1})
+            `;
+            customCursor.style.width = '10px';
+            customCursor.style.height = '10px';
+            customCursor.style.backgroundColor = isHoveringClickable
+                ? 'rgba(80,80,80,0.92)'
+                : 'rgba(120,120,120,0.68)';
+            customCursor.style.opacity = isCursorVisible ? (isHoveringClickable ? '0.85' : '0.65') : '0';
+            customCursor.style.transition =
+                `transform 0.18s cubic-bezier(.4,2,.6,1), width 0.13s, height 0.13s, background 0.18s, opacity 0.18s`;
+        }
+    }, [cursorX, cursorY, isCursorVisible, isHoveringClickable]);
 
     return (
-        <div className="bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 font-sans">
-             <style>{`
+        <div className="bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 font-sans cursor-none">
+            <style>{`
                 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
                 body { font-family: 'Inter', sans-serif; }
+                body, html { cursor: none !important; }
             `}</style>
-            <div className="mx-auto min-h-screen max-w-screen-xl px-6 py-12 md:px-12 md:py-20 lg:px-24 lg:py-0">
-                <div className="lg:flex lg:justify-between lg:gap-4">
-                    <Header data={portfolioData} activeLink={activeLink} isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
-                    <main id="content" className="pt-24 lg:w-1/2 lg:py-24">
-                        <Section id="about" title="About" ref={aboutRef}>
-                            {portfolioData.about.map((p, i) => <p className="mb-4" key={i}>{p}</p>)}
-                        </Section>
 
-                        <Section id="projects" title="Projects" ref={projectsRef}>
-                            <ul className="group/list">
-                                {portfolioData.projects.map((proj, index) => (
-                                   <ProjectItem key={index} project={proj} onProjectClick={setPage} themeColor="blue" />
+            {page === 'quant-portfolio' ? (
+                <QuantPortfolioPage
+                    projects={portfolioData.quantProjects}
+                    onBackClick={() => setPage('home')}
+                />
+            ) : (
+                <div className="mx-auto min-h-screen max-w-screen-xl px-6 py-12 md:px-12 md:py-20 lg:px-24 lg:py-0">
+                    <div className="lg:flex lg:justify-between lg:gap-4">
+                        <Header
+                            data={portfolioData}
+                            activeLink={activeLink}
+                            isDarkMode={isDarkMode}
+                            toggleDarkMode={toggleDarkMode}
+                        />
+                        <main id="content" className="pt-24 lg:w-1/2 lg:py-24">
+                            <Section id="about" title="About" ref={aboutRef}>
+                                {portfolioData.about.map((p, i) => (
+                                    <p className="mb-4" key={i}>{p}</p>
                                 ))}
-                            </ul>
-                        </Section>
-
-                        <Section id="experience" title="Experience" ref={experienceRef}>
-                            <ul className="group/list">
-                                {portfolioData.experiences.map(exp => (
-                                    <ExperienceItem key={exp.role + exp.company} experience={exp} themeColor="blue" />
-                                ))}
-                            </ul>
-                        </Section>
-
-                        <footer className="pb-16 text-sm text-slate-500 sm:pb-0">
-                           <p className="flex items-center justify-center">
-                                Hope you enjoy this little
-                                <a href="#" className="ml-2 text-slate-600 hover:text-red-500 dark:text-slate-400 dark:hover:text-sky-300">
-                                    <EasterEggIcon />
-                                </a>.
-                           </p>
-                        </footer>
-                    </main>
+                            </Section>
+                            <Section id="projects" title="Projects" ref={projectsRef}>
+                                <ul className="group/list">
+                                    {portfolioData.projects.map((proj, index) => (
+                                        <ProjectItem
+                                            key={index}
+                                            project={proj}
+                                            onProjectClick={setPage}
+                                            themeColor="blue"
+                                        />
+                                    ))}
+                                </ul>
+                            </Section>
+                            <Section id="experience" title="Experience" ref={experienceRef}>
+                                <ul className="group/list">
+                                    {portfolioData.experiences.map(exp => (
+                                        <ExperienceItem
+                                            key={exp.role + exp.company}
+                                            experience={exp}
+                                            themeColor="blue"
+                                        />
+                                    ))}
+                                </ul>
+                            </Section>
+                            <footer className="pb-16 text-sm text-slate-500 sm:pb-0">
+                                <p className="flex items-center justify-center">
+                                    Hope you enjoy this little
+                                    <a href="#" className="ml-2 text-slate-600 hover:text-red-500 dark:text-slate-400 dark:hover:text-sky-300">
+                                        <EasterEggIcon />
+                                    </a>.
+                                </p>
+                            </footer>
+                        </main>
+                    </div>
                 </div>
-            </div>
+            )}
+
+            <div
+                id="custom-cursor"
+                style={{
+                    position: 'fixed',
+                    left: 0,
+                    top: 0,
+                    pointerEvents: 'none',
+                    zIndex: 9999,
+                    width: '10px',
+                    height: '10px',
+                    borderRadius: '50%',
+                    background: 'rgba(120,120,120,0.7)',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+                    opacity: 0,
+                    transition: 'transform 0.2s cubic-bezier(.4,2,.6,1), width 0.15s, height 0.15s, background 0.2s, opacity 0.2s',
+                    mixBlendMode: 'exclusion',
+                    willChange: 'transform, width, height, background, opacity'
+                }}
+            />
         </div>
     );
 }
