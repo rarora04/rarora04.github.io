@@ -1,4 +1,3 @@
-// App.js
 import React, { useState, useEffect, useRef } from 'react';
 import QuantPortfolioPage from './QuantPortfolioPage';
 
@@ -71,8 +70,8 @@ const portfolioData = {
   ],
   navLinks: [
       { name: "About", href: "#about" },
-      { name: "Projects", href: "#projects" },
       { name: "Experience", href: "#experience" },
+      { name: "Projects", href: "#projects" },
       { name: "Resume", href: "/Rahul Resume.pdf", target: "_blank" },
   ],
   socialLinks: [
@@ -176,6 +175,12 @@ const ProjectItem = ({ project, onProjectClick, themeColor }) => {
             }
           : {})}
       >
+        <div className="absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-md transition motion-reduce:transition-none
+          lg:-inset-x-6 lg:block
+          group-hover:bg-white/30 dark:group-hover:bg-slate-800/50
+          group-hover:shadow-[inset_0_1px_0_0_rgba(148,163,184,0.1)]
+          group-hover:drop-shadow-sm
+        "></div>
         <header className="z-10 mb-2 mt-1 text-xs font-semibold uppercase tracking-wide text-slate-500 sm:col-span-2" aria-hidden="true"></header>
         <div className="z-10 sm:col-span-6">
           <h3 className="font-medium leading-snug text-slate-900 dark:text-slate-200">
@@ -228,6 +233,12 @@ const ExperienceItem = ({ experience, themeColor }) => {
         active:scale-[0.99] active:translate-y-0.5 active:shadow-inner
         rounded-lg
       ">
+        <div className="absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-md transition motion-reduce:transition-none
+          lg:-inset-x-6 lg:block
+          group-hover:bg-white/30 dark:group-hover:bg-slate-800/50
+          group-hover:shadow-[inset_0_1px_0_0_rgba(148,163,184,0.1)]
+          group-hover:drop-shadow-sm
+        "></div>
         <header className="z-10 mb-2 mt-1 text-xs font-semibold uppercase tracking-wide text-slate-500 sm:col-span-2" aria-label={experience.date}>{experience.date}</header>
         <div className="z-10 sm:col-span-6">
           <h3 className="font-medium leading-snug text-slate-900 dark:text-slate-200">
@@ -273,11 +284,6 @@ export default function App() {
         return false;
     });
 
-    const [cursorX, setCursorX] = useState(0);
-    const [cursorY, setCursorY] = useState(0);
-    const [isCursorVisible, setIsCursorVisible] = useState(false);
-    const [isHoveringClickable, setIsHoveringClickable] = useState(false);
-
     useEffect(() => {
         const root = window.document.documentElement;
         if (isDarkMode) {
@@ -318,77 +324,11 @@ export default function App() {
         document.title = page === 'home' ? `Rahul Arora | Personal Portfolio` : `Rahul Arora | Quant Portfolio`;
     }, [page]);
 
-    useEffect(() => {
-        const customCursor = document.getElementById('custom-cursor');
-        if (!customCursor) return;
-
-        const updateCursorPosition = (e) => {
-            setCursorX(e.clientX);
-            setCursorY(e.clientY);
-            setIsCursorVisible(true);
-        };
-        const hideCursor = () => setIsCursorVisible(false);
-
-        const handleMouseEnter = (e) => {
-            const target = e.target;
-            const isClickable =
-                target.tagName === 'A' ||
-                target.tagName === 'BUTTON' ||
-                target.closest('[role="button"]') ||
-                target.closest('.clickable');
-            setIsHoveringClickable(isClickable);
-        };
-        const handleMouseLeave = () => setIsHoveringClickable(false);
-
-        document.addEventListener('mousemove', updateCursorPosition);
-        document.documentElement.addEventListener('mouseleave', hideCursor);
-        document.documentElement.addEventListener('mouseover', handleMouseEnter);
-        document.documentElement.addEventListener('mouseout', handleMouseLeave);
-
-        const handleClick = () => {
-            if (customCursor) {
-                customCursor.style.transform += ' scale(0.7)';
-                setTimeout(() => {
-                    customCursor.style.transform = customCursor.style.transform.replace(' scale(0.7)', '');
-                }, 120);
-            }
-        };
-        document.addEventListener('mousedown', handleClick);
-
-        return () => {
-            document.removeEventListener('mousemove', updateCursorPosition);
-            document.documentElement.removeEventListener('mouseleave', hideCursor);
-            document.documentElement.removeEventListener('mouseover', handleMouseEnter);
-            document.documentElement.removeEventListener('mouseout', handleMouseLeave);
-            document.removeEventListener('mousedown', handleClick);
-        };
-    }, []);
-
-    useEffect(() => {
-        const customCursor = document.getElementById('custom-cursor');
-        if (customCursor) {
-            const radius = 5;
-            customCursor.style.transform = `
-                translate(${cursorX - radius}px, ${cursorY - radius}px)
-                scale(${isHoveringClickable ? 1.2 : 1})
-            `;
-            customCursor.style.width = '10px';
-            customCursor.style.height = '10px';
-            customCursor.style.backgroundColor = isHoveringClickable
-                ? 'rgba(80,80,80,0.92)'
-                : 'rgba(120,120,120,0.68)';
-            customCursor.style.opacity = isCursorVisible ? (isHoveringClickable ? '0.85' : '0.65') : '0';
-            customCursor.style.transition =
-                `transform 0.18s cubic-bezier(.4,2,.6,1), width 0.13s, height 0.13s, background 0.18s, opacity 0.18s`;
-        }
-    }, [cursorX, cursorY, isCursorVisible, isHoveringClickable]);
-
     return (
-        <div className="bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 font-sans cursor-none">
+        <div className="bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 font-sans">
             <style>{`
                 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
                 body { font-family: 'Inter', sans-serif; }
-                body, html { cursor: none !important; }
             `}</style>
 
             {page === 'quant-portfolio' ? (
@@ -411,6 +351,17 @@ export default function App() {
                                     <p className="mb-4" key={i}>{p}</p>
                                 ))}
                             </Section>
+                            <Section id="experience" title="Experience" ref={experienceRef}>
+                                <ul className="group/list">
+                                    {portfolioData.experiences.map(exp => (
+                                        <ExperienceItem
+                                            key={exp.role + exp.company}
+                                            experience={exp}
+                                            themeColor="blue"
+                                        />
+                                    ))}
+                                </ul>
+                            </Section>
                             <Section id="projects" title="Projects" ref={projectsRef}>
                                 <ul className="group/list">
                                     {portfolioData.projects.map((proj, index) => (
@@ -418,17 +369,6 @@ export default function App() {
                                             key={index}
                                             project={proj}
                                             onProjectClick={setPage}
-                                            themeColor="blue"
-                                        />
-                                    ))}
-                                </ul>
-                            </Section>
-                            <Section id="experience" title="Experience" ref={experienceRef}>
-                                <ul className="group/list">
-                                    {portfolioData.experiences.map(exp => (
-                                        <ExperienceItem
-                                            key={exp.role + exp.company}
-                                            experience={exp}
                                             themeColor="blue"
                                         />
                                     ))}
@@ -446,26 +386,6 @@ export default function App() {
                     </div>
                 </div>
             )}
-
-            <div
-                id="custom-cursor"
-                style={{
-                    position: 'fixed',
-                    left: 0,
-                    top: 0,
-                    pointerEvents: 'none',
-                    zIndex: 9999,
-                    width: '10px',
-                    height: '10px',
-                    borderRadius: '50%',
-                    background: 'rgba(120,120,120,0.7)',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
-                    opacity: 0,
-                    transition: 'transform 0.2s cubic-bezier(.4,2,.6,1), width 0.15s, height 0.15s, background 0.2s, opacity 0.2s',
-                    mixBlendMode: 'exclusion',
-                    willChange: 'transform, width, height, background, opacity'
-                }}
-            />
         </div>
     );
 }
