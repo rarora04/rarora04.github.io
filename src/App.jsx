@@ -374,14 +374,14 @@ export default function App() {
                                     ))}
                                 </ul>
                             </Section>
-                            <footer className="pb-16 text-sm text-slate-500 sm:pb-0">
+                            {/* <footer className="pb-16 text-sm text-slate-500 sm:pb-0">
                                 <p className="flex items-center justify-center">
                                     Hope you enjoy this little
                                     <a href="#" className="ml-2 text-slate-600 hover:text-red-500 dark:text-slate-400 dark:hover:text-sky-300">
                                         <EasterEggIcon />
                                     </a>.
                                 </p>
-                            </footer>
+                            </footer> */}
                         </main>
                     </div>
                 </div>
