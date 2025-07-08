@@ -46,7 +46,7 @@ const portfolioData = {
     {
         title: "Quant Portfolio 📈",
         link: "quant-portfolio",
-        description: "A collection of projects focused on quantitative analysis, financial modeling, and data-driven strategies.",
+        description: "A collection of projects focused on quantitative analysis, financial modeling, and data-driven strategies. Click me to see more!",
         technologies: ["Python", "Pandas", "Scikit-learn"]
     },
     {
