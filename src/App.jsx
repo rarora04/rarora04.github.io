@@ -66,6 +66,11 @@ const portfolioData = {
       link: "https://github.com/rarora04/Vol-Analysis/",
       description: "A Python-based framework for analyzing volatility.",
       technologies: ["Python", "Pandas", "NumPy", "Matplotlib"]
+    }, {
+      title: "Momentum Time Selection Strategy",
+      link: "https://github.com/rarora04/MomentumTimeSelectionStrat/",
+      description: "A Python-based framework to use a Momentum based strategy to optimize portfolio performance.",
+      technologies: ["Python", "Pandas", "NumPy", "Matplotlib"]
     },
   ],
   navLinks: [
